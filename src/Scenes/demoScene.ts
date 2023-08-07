@@ -25,6 +25,9 @@ import { TargetEntity } from "../Entities/target";
 import { droneAttackSystem } from "../Systems/droneAttack";
 import { LaserMoveSystem } from "../Systems/lasermovement";
 import { targetCollisionSystem } from "../Systems/targetCollision";
+import { grenadeMoveSystem } from "../Systems/grenadeMovement";
+import { rpgMoveSystem } from "../Systems/rpgMovement";
+import { ftMoveSystem } from "../Systems/ftMovment";
 /* *README*
   You will import all your  ECS entities for this scene here
   for example
@@ -73,6 +76,9 @@ export class Test extends Scene {
     camera.vpSystems.push(new LaserMoveSystem());
     camera.vpSystems.push(new droneAttackSystem(camera, collisionSystem));
     camera.vpSystems.push(new targetCollisionSystem(collisionSystem, camera));
+    camera.vpSystems.push(new grenadeMoveSystem());
+    camera.vpSystems.push(new rpgMoveSystem());
+    camera.vpSystems.push(new ftMoveSystem());
 
     //Systems being added for Scene to own
     this.sceneSystems.push(camera);

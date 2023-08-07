@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { Entity } from "../../_SqueletoECS/entity";
 import { Vector } from "../../_SqueletoECS/Vector";
-import dtoken from "../Assets/grenadetoken-Sheet.png";
+import dtoken from "../Assets/rpgtoken-Sheet.png";
 import shadow from "../Assets/tokenshadow.png";
 
 const bouncingToken = {
@@ -39,7 +39,7 @@ const bouncingShadow = {
   },
 };
 
-export class grenadeToken {
+export class rpgToken {
   static create() {
     return Entity.create({
       id: uuidv4(),

@@ -6,6 +6,7 @@ import { collisionComponent } from "../Components/collisionComp";
 import { Box, Body, System as dcSystem, PotentialVector, Response, Circle } from "detect-collisions";
 import { Camera } from "../../_SqueletoECS/Camera";
 import { LaserSmokeEntity } from "../Entities/lasersmoke";
+import { tileExplosionEntity } from "../Entities/tiledExplosion";
 
 // type definition for ensuring the entity template has the correct components
 // ComponentTypes are defined IN the components imported
@@ -36,7 +37,6 @@ export class targetCollisionSystem extends System {
 
       //get lasers
       const lasers = entities.filter(ent => ent.type == "laser");
-      if (lasers.length == 0) return;
 
       lasers.forEach(laser => {
         const isColliding: Boolean = this.cs.checkCollision(entity.collider as Box, laser.collider as Box);
@@ -55,6 +55,32 @@ export class targetCollisionSystem extends System {
             //@ts-ignore
             entities.push(LaserSmokeEntity.create(smokeVector));
             //this.camera.entities.push()
+          }
+        }
+      });
+
+      //get grenades
+      const grenades = entities.filter(ent => ent.type == "grenade");
+      grenades.forEach(grenade => {
+        const isColliding: Boolean = this.cs.checkCollision(entity.collider as Box, grenade.collider as Box);
+        if (isColliding) {
+          //find laser entity index
+          const grenadeIndex = entities.findIndex(ent => {
+            return ent.collider == grenade.collider;
+          });
+          if (grenadeIndex >= 0) {
+            console.log("here");
+
+            //remove from entities
+            //@ts-ignore
+            const smokeVector = entities[grenadeIndex].position;
+            console.log(smokeVector, grenadeIndex);
+
+            this.cs.remove(entities[grenadeIndex].collider as Box);
+            entities.splice(grenadeIndex, 1);
+
+            //@ts-ignore
+            entities.push(tileExplosionEntity.create(smokeVector));
           }
         }
       });

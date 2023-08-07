@@ -3,14 +3,31 @@ import { Vector } from "../_SqueletoECS/Vector";
 import { Entity } from "../_SqueletoECS/entity";
 import { PositionComponent } from "./Components/positionComp";
 import { droneEntity } from "./Entities/drone";
-import { playerEntity } from "./Entities/player";
+import { fThrowerEntity } from "./Entities/flamethrower";
+import { grenadeEntity } from "./Entities/grenade";
+import { rpgEntity } from "./Entities/rpg";
+import { Chance } from "chance";
 
+const chance = Chance();
 type WeaponEntity = Entity & PositionComponent;
 
 export function launchWeapons(camera: Camera, owner: WeaponEntity, type: string, level: string) {
+  console.log(type);
+
   switch (type) {
     case "drone":
       launchDrones(camera, owner, level);
+      break;
+    case "grenades":
+      launchGrenades(camera, owner, level);
+      break;
+    case "RPG":
+      launchRPGs(camera, owner, level);
+      break;
+    case "flamethrower":
+      console.log("here");
+
+      launchFlameThrower(camera, owner, level);
       break;
   }
 }
@@ -23,9 +40,50 @@ function launchDrones(camera: Camera, owner: WeaponEntity, level: string): void 
     startingoffset1 = new Vector(61 * -Math.cos(2.0944), 45 * Math.sin(2.0944));
     startingoffset2 = new Vector(61 * Math.cos(2.0944), 45 * Math.sin(2.0944));
   }
-  console.log("starting offsets: ", startingoffset1, startingoffset2);
 
   camera.entities.push(droneEntity.create(0, llevel, new Vector(owner.position.x, owner.position.y - 45)));
   if (llevel > 3) camera.entities.push(droneEntity.create(1, llevel, owner.position.add(startingoffset1 as Vector)));
   if (llevel > 6) camera.entities.push(droneEntity.create(2, llevel, owner.position.add(startingoffset2 as Vector)));
+}
+
+function launchGrenades(camera: Camera, owner: WeaponEntity, level: string): void {
+  let llevel = parseInt(level);
+  camera.entities.push(grenadeEntity.create(0, llevel, new Vector(owner.position.x, owner.position.y)));
+  if (llevel > 3) camera.entities.push(grenadeEntity.create(1, llevel, new Vector(owner.position.x, owner.position.y)));
+  if (llevel > 6) camera.entities.push(grenadeEntity.create(2, llevel, new Vector(owner.position.x, owner.position.y)));
+}
+
+function launchRPGs(camera: Camera, owner: WeaponEntity, level: string): void {
+  let llevel = parseInt(level);
+  camera.entities.push(rpgEntity.create(0, llevel, new Vector(owner.position.x, owner.position.y)));
+  if (llevel > 3) camera.entities.push(rpgEntity.create(1, llevel, new Vector(owner.position.x, owner.position.y)));
+  if (llevel > 6) camera.entities.push(rpgEntity.create(2, llevel, new Vector(owner.position.x, owner.position.y)));
+}
+
+function launchFlameThrower(camera: Camera, owner: WeaponEntity, level: string) {
+  let llevel = parseInt(level);
+  let fanAngle: number;
+  let duration;
+  if (llevel < 4) {
+    fanAngle = 5;
+    duration = 4;
+  } else if (llevel > 3 && llevel < 7) {
+    fanAngle = 10;
+    duration = 6;
+  } else {
+    fanAngle = 20;
+    duration = 8;
+  }
+  let direction: "up" | "down" | "left" | "right" = chance.pickone(["left", "right", "up", "down"]);
+  let fentIndex = 0;
+  console.log("here");
+  const FTtimer = setInterval(() => {
+    camera.entities.push(
+      fThrowerEntity.create(fentIndex, llevel, new Vector(owner.position.x, owner.position.y), fanAngle, direction)
+    );
+    console.log(camera.entities);
+  }, 75);
+  setTimeout(() => {
+    clearInterval(FTtimer);
+  }, duration * 1000);
 }

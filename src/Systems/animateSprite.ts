@@ -55,8 +55,9 @@ export class animateSpriteSystem extends System {
                 }
               }
               break;
-
             case "lasersmoke":
+            case "tileexplosion":
+            case "flamethrower":
               if (
                 sprite.frameTik != undefined &&
                 sprite.frameIndex != undefined &&
@@ -84,7 +85,7 @@ export class animateSpriteSystem extends System {
                 }
               }
               break;
-              break;
+
             default:
               //this layer is animated
 
