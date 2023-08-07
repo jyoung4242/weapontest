@@ -132,6 +132,8 @@ export class weaponUI {
         break;
       case "flamethrower":
         break;
+      case "knives":
+        break;
     }
   }
 

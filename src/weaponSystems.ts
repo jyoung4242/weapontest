@@ -7,6 +7,8 @@ import { fThrowerEntity } from "./Entities/flamethrower";
 import { grenadeEntity } from "./Entities/grenade";
 import { rpgEntity } from "./Entities/rpg";
 import { Chance } from "chance";
+import { tknifeEntity } from "./Entities/tknife";
+import { uavEntity } from "./Entities/uav";
 
 const chance = Chance();
 type WeaponEntity = Entity & PositionComponent;
@@ -28,6 +30,12 @@ export function launchWeapons(camera: Camera, owner: WeaponEntity, type: string,
       console.log("here");
 
       launchFlameThrower(camera, owner, level);
+      break;
+    case "knives":
+      launchKnife(camera, owner, level);
+      break;
+    case "artillery":
+      launchUAV(camera, owner, level);
       break;
   }
 }
@@ -86,4 +94,30 @@ function launchFlameThrower(camera: Camera, owner: WeaponEntity, level: string) 
   setTimeout(() => {
     clearInterval(FTtimer);
   }, duration * 1000);
+}
+
+function launchKnife(camera: Camera, owner: WeaponEntity, level: string) {
+  let llevel = parseInt(level);
+  let direction: "up" | "down" | "left" | "right" = chance.pickone(["left", "right", "up", "down"]);
+  let knifeoffset1, knifeoffset2;
+  switch (direction) {
+    case "up":
+    case "down":
+      knifeoffset1 = new Vector(owner.position.x - 8, owner.position.y);
+      knifeoffset2 = new Vector(owner.position.x + 8, owner.position.y);
+      break;
+    case "left":
+    case "right":
+      knifeoffset1 = new Vector(owner.position.x, owner.position.y + 8);
+      knifeoffset2 = new Vector(owner.position.x, owner.position.y - 8);
+      break;
+  }
+  camera.entities.push(tknifeEntity.create(0, llevel, owner.position, direction));
+  if (llevel > 3) camera.entities.push(tknifeEntity.create(1, llevel, knifeoffset1, direction));
+  if (llevel > 6) camera.entities.push(tknifeEntity.create(2, llevel, knifeoffset2, direction));
+}
+
+function launchUAV(camera: Camera, owner: WeaponEntity, level: string) {
+  let llevel = parseInt(level);
+  camera.entities.push(uavEntity.create(0, llevel));
 }

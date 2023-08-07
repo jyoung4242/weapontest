@@ -9,6 +9,7 @@
 import { collisionComp } from "./collisionComp";
 import { droneStateComp } from "./droneState";
 import { grenadeStateComp } from "./grenadeState";
+import { LevelComp } from "./level";
 import { OrientationComp } from "./orientation";
 import { Position } from "./positionComp";
 import { rpgStateComp } from "./rpgState";
@@ -32,5 +33,6 @@ export function LoadComponents() {
     new collisionComp(),
     new grenadeStateComp(),
     new rpgStateComp(),
+    new LevelComp(),
   ];
 }

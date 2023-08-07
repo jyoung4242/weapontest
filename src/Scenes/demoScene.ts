@@ -28,6 +28,8 @@ import { targetCollisionSystem } from "../Systems/targetCollision";
 import { grenadeMoveSystem } from "../Systems/grenadeMovement";
 import { rpgMoveSystem } from "../Systems/rpgMovement";
 import { ftMoveSystem } from "../Systems/ftMovment";
+import { knifeMoveSystem } from "../Systems/knifeMovement";
+import { uavMoveSystem } from "../Systems/uavMovement";
 /* *README*
   You will import all your  ECS entities for this scene here
   for example
@@ -79,6 +81,8 @@ export class Test extends Scene {
     camera.vpSystems.push(new grenadeMoveSystem());
     camera.vpSystems.push(new rpgMoveSystem());
     camera.vpSystems.push(new ftMoveSystem());
+    camera.vpSystems.push(new knifeMoveSystem());
+    camera.vpSystems.push(new uavMoveSystem());
 
     //Systems being added for Scene to own
     this.sceneSystems.push(camera);
